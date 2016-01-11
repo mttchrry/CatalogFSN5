@@ -16,24 +16,6 @@
 
 <body>  
 
-<!-- FACEBOOK initialization -->
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '516361965208355',
-      xfbml      : true,
-      version    : 'v2.5'
-    });
-  };
-
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-</script>
 
 <!-- data-accesstype="offline" -->
 <!-- GOOGLE PLUS SIGN IN BUTTON-->
@@ -47,20 +29,9 @@
       data-approvalprompt="force">
     </span>
   </div>
+  <div id="result"></div>
+  <!--END GOOGLE PLUS SIGN IN BUTTON -->
 
-  <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
-    <a href='javascript:sendToketToServer()'>Login With Facebook</a>
-  </fb:login-button>
-
-<!-- FACEBOOK TEST -->
-<div
-  class="fb-like"
-  data-share="true"
-  data-width="450"
-  data-show-faces="true">
-</div>
-
-<div id="result"></div>
 <script>
 function signInCallback(authResult) {
   if (authResult['code']) {
@@ -89,13 +60,65 @@ function signInCallback(authResult) {
       }
       
   }); } }
-</script>
+  </script>
+  <!-- FACEBOOK SCRIPT -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId: '516361965208355',
+        cookie: true, // enable cookies to allow the server to access the session.
+        xfbml: true, // parse social plugins on this page
+        version: 'v2.5' // use version 2.5
+      });
+    };
 
+    // Load the SDK asynchronously
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
 
+    function sendTokenToServer() {
+      var access_token = FB.getAuthResponse()['accessToken'];
+      console.log('Welcome! Fetching your access token... ');
+      console.log(access_token);
+      FB.api('/me', function(response) {
+        console.log('Successful login for: ' + response.name);
+        $.ajax({
+          type: 'POST',
+          url: '/fbconnect?state={{STATE}}',
+          processData: false,
+          data: access_token,
+          contentType: 'application/octet-stream; charset=utf-8',
+          success: function(result) {
+            // Handle or verify the server response if necessary.
+            if (result) {
+              $('#result').html('Login Successful!</br>' + result + '</br>Redirecting...')
+              setTimeout(function() {
+                window.location.href = "/restaurant";
+              }, 4000);
+            }
+          }
+        });
+      });
+    }
+  </script>
+  <button>
+    <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+      <a href="javascript:sendTokenToServer()">Login with Facebook</a>
+    </fb:login-button>
+  </button>
 
-
-<!--END GOOGLE PLUS SIGN IN BUTTON -->
-
+  <!-- FACEBOOK TEST -->
+  <div
+    class="fb-like"
+    data-share="true"
+    data-width="450"
+    data-show-faces="true">
+  </div>
 </body>
 
 </html>
