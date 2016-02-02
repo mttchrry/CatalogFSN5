@@ -34,19 +34,19 @@
 		<div class="col-md-1"></div>
 		<div class="col-md-10 padding-none">
 			<a href="{{url_for('newRestaurant')}}">
-				<button class="btn btn-default" id="new-restaurant">
-					<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add Restaurant
+				<button class="btn btn-default" id="new-catagory">
+					<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add Item
 				</button>
 			</a>
 		</div>
 		<div class="col-md-1"></div>
 	</div>
-	{% for restaurant in restaurants %}
-		<a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">
+	{% for catagory in catagories %}
+		<a href = "{{url_for('showCatagory', catagory_id = catagory.id)}}">
 			<div class="row">
 				<div class="col-md-1"></div>
-					<div class="col-md-10 restaurant-list">
-						<h3>{{restaurant.name}}</h3>
+					<div class="col-md-10 catagory-list">
+						<h3>{{catagory.name}}</h3>
 					</div>
 				<div class="col-md-1"></div>
 			</div>

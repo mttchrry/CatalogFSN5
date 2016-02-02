@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -23,8 +23,8 @@ class User(Base):
            'picture'      : self.picture,
        }
 
-class Restaurant(Base):
-    __tablename__ = 'restaurant'
+class Catagory(Base):
+    __tablename__ = 'catagory'
    
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
@@ -39,17 +39,15 @@ class Restaurant(Base):
            'id'           : self.id,
        }
  
-class MenuItem(Base):
+class CatalogItem(Base):
     __tablename__ = 'menu_item'
-
 
     name =Column(String(80), nullable = False)
     id = Column(Integer, primary_key = True)
-    description = Column(String(250))
-    price = Column(String(8))
-    course = Column(String(250))
-    restaurant_id = Column(Integer,ForeignKey('restaurant.id'))
-    restaurant = relationship(Restaurant)
+    description = Column(String(500))
+    created_date = Column(DateTime, default=func.now())
+    catagory_id = Column(Integer,ForeignKey('catagory.id'))
+    catagory = relationship(Catagory)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
@@ -60,11 +58,11 @@ class MenuItem(Base):
            'name'         : self.name,
            'description'         : self.description,
            'id'         : self.id,
-           'price'         : self.price,
-           'course'         : self.course,
+           'created_date'         : self.created_date,
+           'catagory'         : self.catagory.name,
        }
 
-engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine('sqlite:///catalogwithusers.db')
  
 
 Base.metadata.create_all(engine)
