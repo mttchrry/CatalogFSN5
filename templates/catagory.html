@@ -42,8 +42,8 @@
 					<span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Add Catalog Item
 				</button>
 			</a>
-						<a href="{{url_for('deleteRestaurant', catagory_id = catagory.id )}}">
-				<button class="btn btn-default delete" id="delete-restaurant">
+			<a href="{{url_for('deleteCatagory', catagory_id = catagory.id )}}">
+				<button class="btn btn-default delete" id="delete-catagory">
 					<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete Catagory
 				</button>
 			</a>
@@ -54,14 +54,14 @@
 	{% if items !=[] %}	
 		<div class="row">
 			<div class="col-md-1"></div>
-			<div class="col-md-3">
+			<div class="col-md-8">
 				<h2>Items</h2>
 					{% for i in items %}
 						<div class="menu-item">
 							<h3>{{i.name}}</h3>
 							<p>{{i.description}}</p>
-							<a href='{{url_for('editCatalogItem', catagory_id = catagory.id, menu_id=i.id ) }}'>Edit</a> | 
-							<a href='{{url_for('deleteMenuItem', catagory_id = catagory.id, menu_id=i.id ) }}'>Delete</a>
+							<a href='{{url_for('editCatalogItem', catagory_id = catagory.id, item_id=i.id ) }}'>Edit</a> | 
+							<a href='{{url_for('deleteCatalogItem', catagory_id = catagory.id, item_id=i.id ) }}'>Delete</a> 
 						</div>
 					{% endfor %}
 			</div>
