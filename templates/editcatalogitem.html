@@ -23,7 +23,7 @@
 						<label for="catagory">Catagory:</label>
 						<select name="catagory" width="300px">
 						{% for cat in catagories %}
-						    <option value="{{ cat.name }}" {% if  cat.id==catagory_id %} selected="selected"{% endif %}>{{ cat.name }}</option>
+						    <option value="{{ cat.name }}" {% if  cat.name==catagory_name %} selected="selected"{% endif %}>{{ cat.name }}</option>
 						{% endfor %}
 						</select>
 					</div>

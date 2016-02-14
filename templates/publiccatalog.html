@@ -40,7 +40,7 @@
 		<div class="col-md-1"></div>
 	</div>
 	{% for catagory in catagories %}
-		<a href = "{{url_for('showCatagory', catagory_id = catagory.id)}}">
+		<a href = "{{url_for('showCatagory', catagory_name = catagory.name)}}">
 			<div class="row">
 				<div class="col-md-1"></div>
 					<div class="col-md-10 catagory-list">

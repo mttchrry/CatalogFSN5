@@ -32,17 +32,17 @@
 	<div class="row padding-top padding-bottom">
 		<div class="col-md-1"></div>
 		<div class="col-md-11 padding-none">
-			<a href="{{url_for('editCatagory', catagory_id = catagory.id )}}">
+			<a href="{{url_for('editCatagory', catagory_name = catagory.name )}}">
 				<button class="btn btn-default" id="new-catalog-item">
 					<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>Edit Catagory
 				</button>
 			</a>
-			<a href="{{url_for('newCatalogItem', catagory_id = catagory.id )}}">
+			<a href="{{url_for('newCatalogItem', catagory_name = catagory.name )}}">
 				<button class="btn btn-default" id="new-catalog-item">
 					<span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Add Catalog Item
 				</button>
 			</a>
-			<a href="{{url_for('deleteCatagory', catagory_id = catagory.id )}}">
+			<a href="{{url_for('deleteCatagory', catagory_name = catagory.name )}}">
 				<button class="btn btn-default delete" id="delete-catagory">
 					<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete Catagory
 				</button>
@@ -58,10 +58,10 @@
 				<h2>Items</h2>
 					{% for i in items %}
 						<div class="menu-item">
-							<h3>{{i.name}}</h3>
+							<h3><a href="{{url_for('showCatalogItem', catagory_name = catagory.name, item_name=i.name ) }}">{{i.name}}</a></h3>
 							<p>{{i.description}}</p>
-							<a href='{{url_for('editCatalogItem', catagory_id = catagory.id, item_id=i.id ) }}'>Edit</a> | 
-							<a href='{{url_for('deleteCatalogItem', catagory_id = catagory.id, item_id=i.id ) }}'>Delete</a> 
+							<a href="{{url_for('editCatalogItem', catagory_name = catagory.name, item_name=i.name ) }}">Edit</a> | 
+							<a href="{{url_for('deleteCatalogItem', catagory_name = catagory.name, item_name=i.name ) }}">Delete</a> 
 						</div>
 					{% endfor %}
 			</div>

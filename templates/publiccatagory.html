@@ -43,7 +43,7 @@
 				<h2>Items</h2>
 				{% for i in items %}
 					<div class="menu-item">
-						<h3>{{i.name}}</h3>
+						<h3><a href="{{url_for('showCatalogItem', catagory_name = catagory.name, item_name=i.name ) }}">{{i.name}}</a></h3>
 						<p>{{i.description}}</p>							
 					</div>
 				{% endfor %}

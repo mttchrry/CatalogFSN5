@@ -10,8 +10,8 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6 col-md-offset-1 padding-top">
-			<form action="{{ url_for('editCatagory', catagory_id = catagory.id)}}" method = "post">
+		<div class="col-md\-6 col-md-offset-1 padding-top">
+			<form action="{{ url_for('editCatagory', catagory_name = catagory.name)}}" method = "post">
 				<div class="form-group">
 					<label for="name">Name:</label>
 					<input type ="text" class="form-control" name="name" value="{{catagory.name }}">

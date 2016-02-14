@@ -26,8 +26,8 @@ class User(Base):
 class Catagory(Base):
     __tablename__ = 'catagory'
    
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    # id = Column(Integer, primary_key=True)
+    name = Column(String(250), primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
@@ -35,18 +35,17 @@ class Catagory(Base):
     def serialize(self):
        """Return object data in easily serializeable format"""
        return {
-           'name'         : self.name,
-           'id'           : self.id,
+           'name'         : self.name
        }
  
 class CatalogItem(Base):
-    __tablename__ = 'menu_item'
+    __tablename__ = 'catalog_item'
 
-    name =Column(String(80), nullable = False)
-    id = Column(Integer, primary_key = True)
+    name =Column(String(80), primary_key = True)
+    # id = Column(Integer, primary_key = True)
     description = Column(String(500))
     created_date = Column(DateTime, default=func.now())
-    catagory_id = Column(Integer,ForeignKey('catagory.id'))
+    catagory_name = Column(String(250),ForeignKey('catagory.name'), primary_key=True)
     catagory = relationship(Catagory)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
@@ -57,7 +56,6 @@ class CatalogItem(Base):
        return {
            'name'         : self.name,
            'description'         : self.description,
-           'id'         : self.id,
            'created_date'         : self.created_date,
            'catagory'         : self.catagory.name,
        }
