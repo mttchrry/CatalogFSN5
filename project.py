@@ -270,7 +270,7 @@ def catalogJSON():
     return jsonify(catalog=[c.serialize for c in catalog])
 
 
-# Show all restaurants
+# Show all catagories and recent items.
 @app.route('/')
 @app.route('/catalog/')
 def showCatalog():
@@ -286,7 +286,7 @@ def newCatagory():
     if 'username' not in login_session: 
         return redirect(url_for('showLogin'))
     if request.method == 'POST':
-        existing_name = session.query(Catagory).filter_by(name=request.form['name']).one()
+        existing_name = session.query(Catagory).filter_by(name=request.form['name']).first()
         if existing_name is not None:
             flash('A catagory with the name %s already exists, Catagory not created.' % (request.form['name']))
             return redirect(url_for('showCatalog'))
@@ -372,8 +372,8 @@ def newCatalogItem(catagory_name):
         return redirect(url_for('showLogin'))
     catagories = session.query(Catagory).order_by(asc(Catagory.name)).all()
     if request.method == 'POST':
-        selectedCatagory = session.query(Catagory).filter_by(name=request.form['catagory']).one()
-        existing_item = session.query(CatalogItem).filter_by(name=request.form['name'], catagory_name=selectedCatagory.name).one()
+        selectedCatagory = session.query(Catagory).filter_by(name=request.form['catagory']).first()
+        existing_item = session.query(CatalogItem).filter_by(name=request.form['name'], catagory_name=selectedCatagory.name).first()
         if existing_item is not None:
             flash('An item with the name %s alread exists in Catagory %s. Item not created.' % (request.form['name'], selectedCatagory.name))
             return redirect(url_for('showCatalog'))       
@@ -391,14 +391,17 @@ def newCatalogItem(catagory_name):
 def editCatalogItem(catagory_name, item_name):
     if 'username' not in login_session: 
         return redirect(url_for('showLogin'))
-    editedItem = session.query(CatalogItem).filter_by(name=item_name, catagory_name=catagory_name).one()
+    editedItem = session.query(CatalogItem).filter_by(name=item_name, catagory_name=catagory_name).first()
+    if editedItem is None:
+        return '<script>function myFunction() {alert("No Item here. Return to Main Page.");}</script><body onload="myFunction()"">'
     if editedItem.user_id != login_session['user_id']:
         return '<script>function myFunction() {alert("You are not authorized to edit this item. Please create your own catalog item in order to Edit.");}</script><body onload="myFunction()"">'
     if request.method == 'POST':
+        selectC = session.query(Catagory).filter_by(name=request.form['catagory'])
         selectedCatagory = session.query(Catagory).filter_by(name=request.form['catagory']).one()
         # If we've changed the name or description, we need to make sure we don't duplciate another item
         if  editedItem.name != request.form['name'] or editedItem.catagory_name != selectedCatagory.name:
-            existing_item = session.query(CatalogItem).filter_by(name=request.form['name'], catagory_name=selectedCatagory.name).one()
+            existing_item = session.query(CatalogItem).filter_by(name=request.form['name'], catagory_name=selectedCatagory.name).first()
             if existing_item is not None:
                 flash('An item with the name %s alread exists in Catagory %s. Item not edited' % (request.form['name'], selectedCatagory.name))
                 return redirect(url_for('showCatalog'))    
@@ -423,7 +426,9 @@ def editCatalogItem(catagory_name, item_name):
 def deleteCatalogItem(catagory_name, item_name):
     if 'username' not in login_session: 
         return redirect(url_for('showLogin'))
-    itemToDelete = session.query(CatalogItem).filter_by(name=item_name).one()
+    itemToDelete = session.query(CatalogItem).filter_by(name=item_name).first()
+    if itemToDelete is None:
+        return '<script>function myFunction() {alert("Item Does not exist, return to main page.");}</script><body onload="myFunction()"">'
     if itemToDelete.user_id != login_session['user_id']:
         return '<script>function myFunction() {alert("You are not authorized to delete this item. Please create your own Catalog item in order to delete.");}</script><body onload="myFunction()"">'
     if request.method == 'POST':
@@ -444,8 +449,11 @@ def getUserID(email):
 
 
 def getUserInfo(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    return user
+    try:
+        user = session.query(User).filter_by(id=user_id).one()
+        return user
+    except:
+        return None
 
 
 def createUser(login_session):
