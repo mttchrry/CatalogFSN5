@@ -38,6 +38,11 @@
 					<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add Catagory
 				</button>
 			</a>
+			<a href="{{url_for('brandNewCatalogItem')}}">
+				<button class="btn btn-default" id="new-item">
+					<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add Item
+				</button>
+			</a>
 		</div>
 		<div class="col-md-1"></div>
 	</div>
@@ -62,7 +67,9 @@
 				<div class="row">
 					<div class="col-md-1"></div>
 						<div class="col-md-10 catagory-list">
-							<h3>{{item.name}}</h3>
+							<h3>
+								<h5>{{item.name}} </h5><h4>({{item.catagory_name}})</h4>
+							</h3>
 						</div>
 					<div class="col-md-1"></div>
 				</div>

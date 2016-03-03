@@ -15,6 +15,14 @@ from flask import make_response
 import requests
 app = Flask(__name__)
 
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.date):
+            return obj.isoformat()
+        return JSONEncoder.default(self, obj)
+
+app.json_encoder = CustomJSONEncoder
+
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "FSN Catalog"
@@ -250,6 +258,7 @@ def disconnect():
 
 
 # JSON APIs to view Catagory Information
+@app.route('/catagory/<string:catagory_name>/json')
 @app.route('/catagory/<string:catagory_name>/JSON')
 def catagoryJSON(catagory_name):
     catagory = session.query(Catagory).filter_by(name=catagory_name).one()
@@ -257,18 +266,24 @@ def catagoryJSON(catagory_name):
         catagory_name=catagory_name).all()
     return jsonify(items=[i.serialize for i in items])
 
-
+@app.route('/catagory/<string:catagory_name>/<string:item_name>/json')
 @app.route('/catagory/<string:catagory_name>/<string:item_name>/JSON')
 def catagoryItemJSON(catagory_name, item_name):
     catagory_Item = session.query(CatalogItem).filter_by(name=item_name).one()
     return jsonify(items=catagory_Item.serialize)
 
-
+@app.route('/catagory/json')
 @app.route('/catagory/JSON')
 def catalogJSON():
     catalog = session.query(Catagory).all()
     return jsonify(catalog=[c.serialize for c in catalog])
 
+@app.route('/catalog/json')
+@app.route('/catalog/JSON')
+def catalogItemJSON():
+    print "we got to the jsoner"
+    catalog = session.query(CatalogItem).all()
+    return jsonify(catalog=[c.serialize for c in catalog])
 
 # Show all catagories and recent items.
 @app.route('/')
@@ -344,9 +359,11 @@ def deleteCatagory(catagory_name):
 
 # Show a catagory
 @app.route('/catagory/<string:catagory_name>/')
-@app.route('/catagory/<string:catagory_name>/')
 def showCatagory(catagory_name):
-    catagory = session.query(Catagory).filter_by(name=catagory_name).one()
+    catagory = session.query(Catagory).filter_by(name=catagory_name).first()
+    if catagory is None:
+        flash('No Catagory with the name %s.' % (catagory_name))
+        return redirect(url_for('showCatalog'))  
     items = session.query(CatalogItem).filter_by(
         catagory_name=catagory_name).all()
     creator = getUserInfo(catagory.user_id)
@@ -385,6 +402,13 @@ def newCatalogItem(catagory_name):
         return redirect(url_for('showCatagory', catagory_name=selectedCatagory.name))
     else:
         return render_template('newcatalogitem.html', catagory_name=catagory_name, catagories=catagories)
+
+@app.route('/new/', methods=['GET'])
+def brandNewCatalogItem():
+    if 'username' not in login_session: 
+        return redirect(url_for('showLogin'))
+    catagory = session.query(Catagory).order_by(asc(Catagory.name)).first()
+    return redirect(url_for('newCatalogItem', catagory_name=catagory.name))
 
 # Edit an item
 @app.route('/catagory/<string:catagory_name>/<string:item_name>/edit', methods=['GET', 'POST'])
