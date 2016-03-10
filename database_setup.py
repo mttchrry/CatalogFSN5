@@ -44,8 +44,9 @@ class CatalogItem(Base):
     name =Column(String(80), primary_key = True)
     # id = Column(Integer, primary_key = True)
     description = Column(String(500))
-    created_date = Column(String(500), default=func.now())
-    catagory_name = Column(String(250),ForeignKey('catagory.name'), primary_key=True)
+    created_date = Column(DateTime, default=func.now())
+    catagory_name = Column(String(250),ForeignKey('catagory.name'), 
+                           primary_key=True)
     catagory = relationship(Catagory)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
@@ -56,7 +57,7 @@ class CatalogItem(Base):
        return {
            'name'         : self.name,
            'description'         : self.description,
-           'created_date'         : self.created_date,
+           'created_date'         : self.created_date.isoformat(),
            'catagory'         : self.catagory.name,
        }
 
