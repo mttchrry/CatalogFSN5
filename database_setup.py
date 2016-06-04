@@ -61,7 +61,7 @@ class CatalogItem(Base):
            'catagory'         : self.catagory.name,
        }
 
-engine = create_engine('sqlite:///catalogwithusers.db')
+engine = create_engine('sqlite:///tmp/catalogwithusers.db')
  
 
 Base.metadata.create_all(engine)
