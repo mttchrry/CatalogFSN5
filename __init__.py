@@ -19,7 +19,7 @@ APPLICATION_NAME = "FSN Catalog"
 
 
 # Connect to Database and create database session
-engine = create_engine('postgresql+psycopg2://catalog:catalog@localhost/catalog')
+engine = create_engine('postgresql+psycopg2://catalog:catalog1@localhost/catalog')
 #engine = create_engine('sqlite:///tmp/catalogwithusers.db')
 Base.metadata.bind = engine
 

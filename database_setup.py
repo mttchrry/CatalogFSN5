@@ -61,7 +61,7 @@ class CatalogItem(Base):
            'catagory'         : self.catagory.name,
        }
 
-engine = create_engine('postgresql+psycopg2://catalog:catalog@localhost/catalog')
+engine = create_engine('postgresql+psycopg2://catalog:catalog1@localhost/catalog')
 #engine = create_engine('sqlite:///tmp/catalogwithusers.db')
  
 
